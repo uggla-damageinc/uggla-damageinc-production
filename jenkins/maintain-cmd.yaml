@@ -1,0 +1,13 @@
+run: bin/start.sh
+environment:
+  ADMIN_PWD:
+    value: '{{ .Creds.AdminPwd }}'
+    if: '{{ if .Creds.AdminPwd }}true{{ end }}'
+  CERTIFICATE_KEY:
+    value: '{{ .Creds.SslPrivateKey }}'
+    if: '{{ if (and .Creds.SslPrivateKey (eq .Config.Deploy.Ssl.Method "manual") )
+      }}true{{ end }}'
+  GITHUB_USER_PASS:
+    value: '{{ .Creds.GithubUserPassword }}'
+    if: '{{ if .Creds.GithubUserPassword }}true{{ end }}'
+files: {}

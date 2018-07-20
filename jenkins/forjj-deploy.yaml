@@ -1,0 +1,56 @@
+deploy:
+  deployment:
+    serviceaddr: localhost
+    serviceport: "8080"
+    to: docker
+  name: production
+  type: PRO
+  ssl:
+    method: none
+features:
+- feature:proxy
+- feature:seed-job
+- feature:basic-security
+- feature:tcp-slave-agent-port
+- feature:jenkins-pipeline
+- plugin:managed-scripts
+- plugin:embeddable-build-status
+- feature:credentials
+- feature:csrf
+- plugin:config-file-provider
+- feature:multibranch-github-pipeline
+- plugin:timestamper
+- plugin:mask-passwords
+- plugin:blueocean
+- plugin:blueocean-github-pipeline
+- plugin:ws-cleanup
+- feature:yet-another-docker-plugin
+dockerfile:
+  fromimage: forjdevops/jenkins
+  fromimageversion: ""
+  maintainer: ""
+jenkinsimage:
+  name: uggla-damageinc-jenkins
+  registryreponame: uggla-damageinc
+  registryserver: hub.docker.com
+  version: ""
+projects:
+  dsl-repo: https://github.com/uggla-damageinc/uggla-damageinc-production
+  dsl-path: jenkins/jobs-dsl
+  dsl-default: true
+  list:
+    forjj-example:
+      name: forjj-example
+      sourcetype: github
+      github:
+        apiurl: https://api.github.com/
+        repo: forjj-example
+        repoowner: uggla-damageinc
+    uggla-damageinc-production:
+      name: uggla-damageinc-production
+      sourcetype: github
+      github:
+        apiurl: https://api.github.com/
+        repo: uggla-damageinc-production
+        repoowner: uggla-damageinc
+appextent: {}
