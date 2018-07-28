@@ -8,6 +8,7 @@ deploy:
   ssl:
     method: none
 features:
+- feature:jenkins-init
 - feature:proxy
 - feature:seed-job
 - feature:basic-security

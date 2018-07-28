@@ -35,12 +35,15 @@ TAG_NAME=hub.docker.com/$REPO/$IMAGE_NAME:$IMAGE_VERSION
 if [ "$http_proxy" != "" ]
 then
    PROXY=" --build-arg http_proxy=$http_proxy --build-arg https_proxy=$https_proxy --build-arg no_proxy=$no_proxy"
+   RUN_PROXY=" -e http_proxy -e https_proxy"
    echo "Using your local proxy setting : $http_proxy"
    if [ "$no_proxy" != "" ]
    then
       PROXY="$PROXY --build-arg no_proxy=$no_proxy"
+      RUN_PROXY="$RUN_PROXY -e no_proxy"
       echo "no_proxy : $no_proxy"
    fi
+   export no_proxy http_proxy https_proxy
 fi
 
 if [ -z "$MYFORK" ]
@@ -80,7 +83,7 @@ set -e
 
 set -x
 sudo -n docker pull $IMAGE_BASE
-sudo -n docker run -di --name jplugins $RUN_PROXY -v $DEPLOY:/src -w /src -u $(id -u):$(id -g) -e LOGNAME $IMAGE_BASE /bin/cat
+sudo -n -E docker run -di --name jplugins $RUN_PROXY -v $DEPLOY:/src -w /src -u $(id -u):$(id -g) -e LOGNAME $IMAGE_BASE /bin/cat
 sudo -n docker exec -u 0 -i jplugins curl -L -o /usr/bin/docker-lu https://github.com/forj-oss/docker-lu/releases/download/0.1/docker-lu
 sudo -n docker exec -u 0 -i jplugins chmod +x /usr/bin/docker-lu
 sudo -n docker exec -u 0 -i jplugins docker-lu jenkins $(id -u) jenkins $(id -g)
